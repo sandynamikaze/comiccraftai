@@ -1,8 +1,0 @@
-fastapi
-uvicorn[standard]
-python-dotenv
-google-genai
-jinja2
-huggingface-hub
-fpdf2
-python-multipart
