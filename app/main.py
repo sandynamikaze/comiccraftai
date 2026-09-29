@@ -28,7 +28,7 @@ GENERATED_DIR.mkdir(parents=True, exist_ok=True)
 
 GEMINI_API_KEY = os.getenv("GEMINI_API_KEY")
 TEXT_MODEL = os.getenv("TEXT_MODEL", "gemini-3.8-flash")
-TEXT_FALLBACK_MODEL = os.getenv("TEXT_FALLBACK_MODEL", "gemini-2.5-flash")
+TEXT_FALLBACK_MODEL = os.getenv("TEXT_FALLBACK_MODEL", "gemini-3.8-flash")
 IMAGE_MODEL = os.getenv("IMAGE_MODEL", "gemini-3.1-flash-image")
 MAX_RETRIES = int(os.getenv("MAX_RETRIES", "3"))
 
