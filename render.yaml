@@ -1,0 +1,17 @@
+services:
+  - type: web
+    name: comiccraft-ai
+    runtime: python
+    buildCommand: pip install -r requirements.txt
+    startCommand: uvicorn app.main:app --host 0.0.0.0 --port $PORT
+    envVars:
+      - key: GEMINI_API_KEY
+        sync: false
+      - key: TEXT_MODEL
+        value: gemini-3.8-flash
+      - key: TEXT_FALLBACK_MODEL
+        value: gemini-2.5-flash
+      - key: IMAGE_MODEL
+        value: gemini-3.1-flash-image
+      - key: MAX_RETRIES
+        value: "3"
