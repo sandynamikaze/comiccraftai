@@ -151,7 +151,6 @@ Important:
             input=full_prompt,
             response_format={
                 "type": "image",
-                "mime_type": "image/png",
                 "aspect_ratio": "4:3",
                 "image_size": "1K",
             },
