@@ -176,8 +176,9 @@ Important:
         output_path.write_bytes(base64.b64decode(image_data))
         return True
     except Exception as exc:
-        print(f"Image generation failed: {exc}")
-        return False
+    print(f"IMAGE ERROR TYPE: {type(exc).__name__}")
+    print(f"IMAGE ERROR: {repr(exc)}")
+    return False
 
 
 def make_placeholder(path: Path, panel_no: int, caption: str):
