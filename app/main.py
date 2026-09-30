@@ -175,7 +175,7 @@ Important:
 
         output_path.write_bytes(base64.b64decode(image_data))
         return True
-     except Exception as exc:
+    except Exception as exc:
         print(f"IMAGE ERROR TYPE: {type(exc).__name__}")
         print(f"IMAGE ERROR: {repr(exc)}")
         return False
