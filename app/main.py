@@ -255,6 +255,26 @@ def home():
 def health():
     return {"status": "ok", "service": "ComicCraft AI"}
 
+@app.get("/test-image")
+def test_image():
+    test_path = GENERATED_DIR / "test_image.png"
+
+    ok = generate_image(
+        "A cute fox in a magical forest, colorful comic book style",
+        test_path
+    )
+
+    if not ok:
+        raise HTTPException(
+            status_code=500,
+            detail="Image generation failed. Check Render logs."
+        )
+
+    return {
+        "success": True,
+        "image": "/static/generated/test_image.png"
+    }
+
 
 @app.post("/generate")
 def generate(req: ComicRequest, request: Request):
