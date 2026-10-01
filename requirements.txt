@@ -5,3 +5,4 @@ google-genai
 pillow
 reportlab
 pydantic
+huggingface_hub
