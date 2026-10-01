@@ -1,49 +1,25 @@
 import os
-
 from dotenv import load_dotenv
 from huggingface_hub import InferenceClient
-
-
-# --------------------------------------------------
-# Load .env
-# --------------------------------------------------
 
 load_dotenv()
 
 HF_TOKEN = os.getenv("HF_TOKEN")
 
 if not HF_TOKEN:
-    raise RuntimeError("HF_TOKEN is missing from .env")
+    raise RuntimeError("HF_TOKEN is missing")
 
-
-# --------------------------------------------------
-# Project paths
-# --------------------------------------------------
-
-# Get the main ComicCraftAI folder
 BASE_DIR = os.path.dirname(
-    os.path.dirname(
-        os.path.abspath(__file__)
-    )
+    os.path.dirname(os.path.abspath(__file__))
 )
 
-# static/panels folder
 OUTPUT_DIR = os.path.join(
     BASE_DIR,
     "static",
     "panels"
 )
 
-# Create folder if it does not exist
-os.makedirs(
-    OUTPUT_DIR,
-    exist_ok=True
-)
-
-
-# --------------------------------------------------
-# Hugging Face
-# --------------------------------------------------
+os.makedirs(OUTPUT_DIR, exist_ok=True)
 
 client = InferenceClient(
     api_key=HF_TOKEN,
@@ -52,10 +28,6 @@ client = InferenceClient(
 
 MODEL_NAME = "black-forest-labs/FLUX.1-schnell"
 
-
-# --------------------------------------------------
-# Generate image
-# --------------------------------------------------
 
 def generate_image(prompt, panel_number):
 
