@@ -1,16 +1,30 @@
 import os
+import base64
+
 from dotenv import load_dotenv
-from huggingface_hub import InferenceClient
+from google import genai
+
+
+# --------------------------------------------------
+# Load .env
+# --------------------------------------------------
 
 load_dotenv()
 
-HF_TOKEN = os.getenv("HF_TOKEN")
+GEMINI_API_KEY = os.getenv("GEMINI_API_KEY")
 
-if not HF_TOKEN:
-    raise RuntimeError("HF_TOKEN is missing")
+if not GEMINI_API_KEY:
+    raise RuntimeError("GEMINI_API_KEY is missing from .env")
+
+
+# --------------------------------------------------
+# Project paths
+# --------------------------------------------------
 
 BASE_DIR = os.path.dirname(
-    os.path.dirname(os.path.abspath(__file__))
+    os.path.dirname(
+        os.path.abspath(__file__)
+    )
 )
 
 OUTPUT_DIR = os.path.join(
@@ -19,36 +33,64 @@ OUTPUT_DIR = os.path.join(
     "panels"
 )
 
-os.makedirs(OUTPUT_DIR, exist_ok=True)
-
-client = InferenceClient(
-    api_key=HF_TOKEN,
-    provider="auto"
+os.makedirs(
+    OUTPUT_DIR,
+    exist_ok=True
 )
 
-MODEL_NAME = "black-forest-labs/FLUX.1-schnell"
 
+# --------------------------------------------------
+# Gemini
+# --------------------------------------------------
+
+client = genai.Client(
+    api_key=GEMINI_API_KEY
+)
+
+MODEL_NAME = "gemini-3.1-flash-image"
+
+
+# --------------------------------------------------
+# Generate image
+# --------------------------------------------------
 
 def generate_image(prompt, panel_number):
 
     final_prompt = f"""
-    Comic book illustration.
-    High quality.
+    Create a high-quality comic book illustration.
+
     Detailed composition.
     Clear main character.
     Expressive face.
     Consistent comic art style.
     Strong visual storytelling.
-    No text inside the image.
+    Cinematic lighting.
+    No text, captions, speech bubbles, or words inside the image.
 
+    Scene:
     {prompt}
     """
 
     print(f"Generating image for panel {panel_number}...")
 
-    image = client.text_to_image(
-        prompt=final_prompt,
-        model=MODEL_NAME
+    interaction = client.interactions.create(
+        model=MODEL_NAME,
+        input=final_prompt,
+        response_format={
+            "type": "image",
+            "mime_type": "image/png",
+            "aspect_ratio": "1:1",
+            "image_size": "1K",
+        },
+    )
+
+    if not interaction.output_image:
+        raise RuntimeError(
+            "Gemini did not return an image."
+        )
+
+    image_data = base64.b64decode(
+        interaction.output_image.data
     )
 
     filename = f"panel_{panel_number}.png"
@@ -58,7 +100,8 @@ def generate_image(prompt, panel_number):
         filename
     )
 
-    image.save(filepath)
+    with open(filepath, "wb") as f:
+        f.write(image_data)
 
     print(f"Panel {panel_number} saved:")
     print(filepath)
